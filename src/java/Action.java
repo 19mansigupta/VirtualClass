@@ -34,6 +34,7 @@ public class Action extends HttpServlet {
                 if (rs.next()) {
                     session.setAttribute("fullname", rs.getString("fullname"));
                     session.setAttribute("username", username);
+                    session.setAttribute("user", "student");
                     response.sendRedirect("student.jsp");
                 } else {
                     out.println("<script>alert('Error in Signin')</script>");
@@ -52,13 +53,15 @@ public class Action extends HttpServlet {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/virtualclass", "root", "root");
 
-                String query = "select fullname from faculty where username='" + username + "' and password='" + password + "'";
+                String query = "select fullname, subject from faculty where username='" + username + "' and password='" + password + "'";
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(query);
 
                 if (rs.next()) {
                     session.setAttribute("fullname", rs.getString("fullname"));
+                    session.setAttribute("subject", rs.getString("subject"));
                     session.setAttribute("username", username);
+                    session.setAttribute("user", "faculty");
                     response.sendRedirect("faculty.jsp");
                 } else {
                     out.println("<script>alert('Error in Signin')</script>");
@@ -102,8 +105,8 @@ public class Action extends HttpServlet {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/virtualclass", "root", "root");
 
-                String query = "insert into student (username, password, studentid, fullname, email, phonenumber, dob, address, fathrsname, mothersname) values('" +
-                        username + "', '" + password + "', " + studentid + ", '" + fullname + "', '" + email + "', " + phonenumber + ", '" + dob + "', '" + address + "', '" + fathersname + "', '" + mothersname + "')";
+                String query = "insert into student (username, password, studentid, fullname, email, phonenumber, dob, address, fathrsname, mothersname) values('"
+                        + username + "', '" + password + "', " + studentid + ", '" + fullname + "', '" + email + "', " + phonenumber + ", '" + dob + "', '" + address + "', '" + fathersname + "', '" + mothersname + "')";
 
                 System.out.println(query);
 
@@ -157,8 +160,8 @@ public class Action extends HttpServlet {
                     Class.forName("com.mysql.jdbc.Driver");
                     Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/virtualclass", "root", "root");
 
-                    String query = "insert into faculty (username, password, facultyid, fullname, email, phonenumber, address, subject) values('" +
-                            username + "', '" + password + "', " + facultyid + ", '" + fullname + "', '" + email + "', " + phonenumber + ", '" + address + "', '" + subject + "')";
+                    String query = "insert into faculty (username, password, facultyid, fullname, email, phonenumber, address, subject) values('"
+                            + username + "', '" + password + "', " + facultyid + ", '" + fullname + "', '" + email + "', " + phonenumber + ", '" + address + "', '" + subject + "')";
 
                     System.out.println(query);
 
@@ -180,39 +183,62 @@ public class Action extends HttpServlet {
             }
         }
 
-        if (request.getParameter("addmobile") != null) {
-            if (session.getAttribute("username").equals("anniescott701")) {
+        if (request.getParameter("addfile") != null) {
+            if (session.getAttribute("user").equals("faculty")) {
                 try {
-                    String id = request.getParameter("id");
-                    String name = request.getParameter("name");
-                    String brand = request.getParameter("brand");
-                    String image = request.getParameter("image");
-                    String screensize = request.getParameter("screensize");
-                    String memorycapacity = request.getParameter("memorycapacity");
-                    String noofsims = request.getParameter("noofsims");
-                    String price = request.getParameter("price");
+                    String filetitle = request.getParameter("filetitle");
+                    String filename = request.getParameter("filename");
+                    String subject = (String) session.getAttribute("subject");
 
-                    Class.forName("org.apache.derby.jdbc.ClientDriver");
-                    Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/project", "root", "root");
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/virtualclass", "root", "root");
 
-                    String query = "INSERT INTO MOBILES (NAME, BRAND, IMAGE, SCREENSIZE, MEMORYCAPACITY, NOOFSIMS, ID, PRICE) VALUES ('" + name + "','" + brand + "','" + image + "','" + screensize + "','" + memorycapacity + "','" + noofsims + "','" + id + "','" + price + "')";
+                    String query = "INSERT INTO files (filetitle, filename, subject) VALUES ('" + filetitle + "','" + filename + "','" + subject + "')";
+                    System.out.println(query);
+                    
                     Statement st = con.createStatement();
                     try {
                         st.executeUpdate(query);
-                        out.print("<script>alert('Success')</script>");
-                        RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
+                        out.print("<script>alert('Successfully added a File')</script>");
+                        RequestDispatcher rd = request.getRequestDispatcher("faculty.jsp");
                         rd.include(request, response);
                     } catch (Exception e) {
-                        out.print("<script>alert('Error in Adding a Mobile')</script>");
-                        RequestDispatcher rd = request.getRequestDispatcher("admin.jsp");
+                        out.print("<script>alert('Error in Adding a File')</script>");
+                        RequestDispatcher rd = request.getRequestDispatcher("faculty.jsp");
                         rd.include(request, response);
                     }
                 } catch (Exception ex) {
                 }
             }
         }
+        
+        
 
-        if (request.getParameter("address") != null) {
+        if (request.getParameter("deletefile") != null) {
+            if (session.getAttribute("user").equals("faculty")) {
+                try {
+                    String filetitle = request.getParameter("filetitle");
+                    String subject = (String) session.getAttribute("subject");
+
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/virtualclass", "root", "root");
+
+                    String query = "delete from files where filetitle='" + filetitle + "' and subject = '" + subject + "'";
+                    
+                    Statement st = con.createStatement();
+                    try {
+                        st.executeUpdate(query);
+                        out.print("<script>alert('Successfully deleted a File')</script>");
+                        RequestDispatcher rd = request.getRequestDispatcher("faculty.jsp");
+                        rd.include(request, response);
+                    } catch (Exception e) {
+                        out.print("<script>alert('Error in Deleting File')</script>");
+                        RequestDispatcher rd = request.getRequestDispatcher("faculty.jsp");
+                        rd.include(request, response);
+                    }
+                } catch (Exception ex) {
+                }
+            }
         }
 
         if (request.getParameter("address") != null) {

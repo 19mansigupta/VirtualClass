@@ -1,3 +1,8 @@
+<%
+    if (!session.getAttribute("user").equals("student")) {
+        response.sendRedirect("index.jsp");
+    }
+%>
 
 <html>
     <head>

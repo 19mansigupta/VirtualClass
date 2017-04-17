@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <h2>Sign Up</h2>
+        <h2>Student Registration</h2>
     </div>
     <hr>
     <form class="form-horizontal" action="Action?registerstudent=true" method="post">

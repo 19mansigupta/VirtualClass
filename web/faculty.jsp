@@ -1,4 +1,15 @@
 
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Connection"%>
+<%
+    if (!session.getAttribute("user").equals("faculty")) {
+        response.sendRedirect("index.jsp");
+    }
+
+%>
+
 <html>
     <head>
         <title>Buy Phones Online</title>

@@ -1,3 +1,8 @@
+<%
+    if (!session.getAttribute("username").equals("admin")) {
+        response.sendRedirect("index.jsp");
+    }
+%>
 
 <html>
     <head>

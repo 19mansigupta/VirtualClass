@@ -27,7 +27,12 @@
                 <li><a href="addfaculty.jsp">Add Faculty</a></li>
                 <li><a href="logout.jsp">Logout</a></li>
                     <%
-                    } else {
+                    } else if (session.getAttribute("user").equals("faculty")) {
+                    %>
+                <li><a href="faculty.jsp">Welcome <%=session.getAttribute("fullname")%></a></li>
+                <li><a href="logout.jsp">Logout</a></li>
+                    <%
+                    } else if (session.getAttribute("user").equals("student")) {
                     %>
                 <li><a href="student.jsp">Welcome <%=session.getAttribute("fullname")%></a></li>
                 <li><a href="logout.jsp">Logout</a></li>
