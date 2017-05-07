@@ -6,7 +6,7 @@
 
 <html>
     <head>
-        <title>Buy Phones Online</title>
+        <title>Add Faculty | Virtual Class</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
