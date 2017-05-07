@@ -1,7 +1,30 @@
-<nav class="navbar navbar-default ">
+<style>
+    .annie_effect{
+        background: rgba(0,0,0,0.4);
+        padding: 17px;
+        margin-top: 40px;
+        border-radius: 2px;
+        color: white;
+        border:1px white solid;
+        box-shadow: 0 0 15px black;
+        transition: box-shadow 1s ease;
+    }
+    
+    body{
+        background-attachment: fixed;
+        background-image: url(files/background.jpg);
+        
+    }
+    
+</style>
+
+<nav class="navbar navbar-default " style="    background-color: rgba(255,255,255,0.6);
+    border: 1px white solid;
+    box-shadow: 0 0 15px black;
+    border-radius: 0px;">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="">Virtual Classroom</a>
+            <a class="navbar-brand">Virtual Classroom</a>
         </div>
 
         <div class="navbar-default">

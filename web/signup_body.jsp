@@ -1,5 +1,5 @@
-<div class="container">
-    <div class="row">
+<div class="container annie_effect">
+    <div class="clearfix">
         <h2>Student Registration</h2>
     </div>
     <hr>
@@ -67,8 +67,10 @@
         <div class="form-group">
             <label class="control-label col-md-3 col-sm-4"></label>
             <div class="col-md-6 col-sm-6">
-                <input type="submit" class="btn" value="Sign Up">
+                <input type="submit" class="btn btn-default" value="Sign Up">
             </div>
         </div>
     </form>
 </div>
+
+<br><br>

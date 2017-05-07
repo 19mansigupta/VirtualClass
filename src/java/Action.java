@@ -56,7 +56,7 @@ public class Action extends HttpServlet {
                 String query = "select fullname, subject from faculty where username='" + username + "' and password='" + password + "'";
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(query);
-
+                System.out.println(query);
                 if (rs.next()) {
                     session.setAttribute("fullname", rs.getString("fullname"));
                     session.setAttribute("subject", rs.getString("subject"));
@@ -85,14 +85,16 @@ public class Action extends HttpServlet {
                 String fathersname = request.getParameter("fathersname");
                 String mothersname = request.getParameter("mothersname");
 
-                try {
-                    Integer.parseInt(phonenumber);
-                } catch (Exception e) {
-                    out.print("<script>alert('Please Check Phone Number')</script>");
-                    RequestDispatcher rd = request.getRequestDispatcher("signup.jsp");
-                    rd.include(request, response);
-                    return;
-                }
+                System.out.println(phonenumber);
+//                try {
+//                    Integer.parseInt(phonenumber);
+//                } catch (Exception e) {
+//                    out.print("<script>alert('Please Check Phone Number')</script>");
+//                    RequestDispatcher rd = request.getRequestDispatcher("signup.jsp");
+//                    rd.include(request, response);
+//                    return;
+//                }
+
                 try {
                     Integer.parseInt(studentid);
                 } catch (Exception e) {
@@ -105,8 +107,8 @@ public class Action extends HttpServlet {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/virtualclass", "root", "root");
 
-                String query = "insert into student (username, password, studentid, fullname, email, phonenumber, dob, address, fathrsname, mothersname) values('"
-                        + username + "', '" + password + "', " + studentid + ", '" + fullname + "', '" + email + "', " + phonenumber + ", '" + dob + "', '" + address + "', '" + fathersname + "', '" + mothersname + "')";
+                String query = "insert into student (username, password, studentid, fullname, email, phonenumber, dob, address, fathersname, mothersname) values('"
+                        + username + "', '" + password + "', " + studentid + ", '" + fullname + "', '" + email + "', '" + phonenumber + "', '" + dob + "', '" + address + "', '" + fathersname + "', '" + mothersname + "')";
 
                 System.out.println(query);
 
@@ -140,14 +142,14 @@ public class Action extends HttpServlet {
                     String address = request.getParameter("address");
                     String subject = request.getParameter("subject");
 
-                    try {
-                        Integer.parseInt(phonenumber);
-                    } catch (Exception e) {
-                        out.print("<script>alert('Please Check Phone Number')</script>");
-                        RequestDispatcher rd = request.getRequestDispatcher("addfaculty.jsp");
-                        rd.include(request, response);
-                        return;
-                    }
+//                    try {
+//                        Integer.parseInt(phonenumber);
+//                    } catch (Exception e) {
+//                        out.print("<script>alert('Please Check Phone Number')</script>");
+//                        RequestDispatcher rd = request.getRequestDispatcher("addfaculty.jsp");
+//                        rd.include(request, response);
+//                        return;
+//                    }
                     try {
                         Integer.parseInt(facultyid);
                     } catch (Exception e) {
@@ -161,15 +163,15 @@ public class Action extends HttpServlet {
                     Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/virtualclass", "root", "root");
 
                     String query = "insert into faculty (username, password, facultyid, fullname, email, phonenumber, address, subject) values('"
-                            + username + "', '" + password + "', " + facultyid + ", '" + fullname + "', '" + email + "', " + phonenumber + ", '" + address + "', '" + subject + "')";
+                            + username + "', '" + password + "', " + facultyid + ", '" + fullname + "', '" + email + "', '" + phonenumber + "', '" + address + "', '" + subject + "')";
 
                     System.out.println(query);
 
                     Statement st = con.createStatement();
                     try {
                         st.executeUpdate(query);
-                        out.print("<script>alert('Successfully Registered as Faculty, Now you can login')</script>");
-                        RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
+                        out.print("<script>alert('Successfully Registered as Faculty, Now the faculty can login')</script>");
+                        RequestDispatcher rd = request.getRequestDispatcher("addfaculty.jsp");
                         rd.include(request, response);
                         return;
                     } catch (Exception e) {
@@ -195,7 +197,7 @@ public class Action extends HttpServlet {
 
                     String query = "INSERT INTO files (filetitle, filename, subject) VALUES ('" + filetitle + "','" + filename + "','" + subject + "')";
                     System.out.println(query);
-                    
+
                     Statement st = con.createStatement();
                     try {
                         st.executeUpdate(query);
@@ -211,8 +213,48 @@ public class Action extends HttpServlet {
                 }
             }
         }
-        
-        
+
+        if (request.getParameter("updateattendance") != null) {
+            if (session.getAttribute("user").equals("faculty")) {
+                try {
+                    String studentid = request.getParameter("studentid");
+                    String totalclasses = request.getParameter("totalclasses");
+                    String classesattended = request.getParameter("classesattended");
+                    String subject = (String) session.getAttribute("subject");
+                    String studentusername = request.getParameter("username");
+
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/virtualclass", "root", "root");
+
+                    String query = "INSERT INTO attendance (studentid, subject, totalclasses, classesattended, studentusername) VALUES (" + studentid + ",'" + subject + "'," + totalclasses + "," + classesattended + ",'" + studentusername + "' )";
+                    System.out.println(query);
+
+                    Statement st = con.createStatement();
+                    try {
+                        st.executeUpdate(query);
+                        out.print("<script>alert('Successfully Updated')</script>");
+                        RequestDispatcher rd = request.getRequestDispatcher("faculty.jsp");
+                        rd.include(request, response);
+                    } catch (Exception e) {
+                        query = "update attendance set  totalclasses = " + totalclasses + ",classesattended=" + classesattended + " where studentusername='" + studentusername + "' and subject='" + subject + "'";
+                        System.out.println(query);
+
+                        st = con.createStatement();
+                        try {
+                            st.executeUpdate(query);
+                            out.print("<script>alert('Successfully Updated')</script>");
+                            RequestDispatcher rd = request.getRequestDispatcher("faculty.jsp");
+                            rd.include(request, response);
+                        } catch (Exception re) {
+                            out.print("<script>alert('Error in Updating')</script>");
+                            RequestDispatcher rd = request.getRequestDispatcher("faculty.jsp");
+                            rd.include(request, response);
+                        }
+                    }
+                } catch (Exception ex) {
+                }
+            }
+        }
 
         if (request.getParameter("deletefile") != null) {
             if (session.getAttribute("user").equals("faculty")) {
@@ -224,7 +266,7 @@ public class Action extends HttpServlet {
                     Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/virtualclass", "root", "root");
 
                     String query = "delete from files where filetitle='" + filetitle + "' and subject = '" + subject + "'";
-                    
+
                     Statement st = con.createStatement();
                     try {
                         st.executeUpdate(query);
